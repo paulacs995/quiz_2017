@@ -234,7 +234,7 @@ exports.random_play = function (req, res, next) {
 
 			if (quiz) {
 			
-			  res.render('quizzes/randomplay', { //llamo a random_play y creo los parametros
+			  res.render('quizzes/random_play', { //llamo a random_play y creo los parametros
 				score: req.session.score,
 				quiz: quiz
 			  });

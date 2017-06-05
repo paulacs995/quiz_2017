@@ -45,7 +45,7 @@ router.get('/help', function (req, res, next) {
 // RANDOMPLAY: Página a mostrar la pregunta a contestar
 router.get('/quizzes/randomplay',                        quizController.random_play);
 
-// r
+// RANDOMCHECK
 router.get('/quizzes/randomcheck/:quizId(\\d+)',         quizController.randomcheck);
 
 
