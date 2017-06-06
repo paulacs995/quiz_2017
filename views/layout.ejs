@@ -39,14 +39,24 @@
         <% if (session.user) { %>
             <a href="/users/<%= session.user.id %>/quizzes">Mis Preguntas</a>
         <% } %>
-        <a href="/author">Créditos</a>
         <% if (session.user) { %>
            <a href="/users">Usuarios</a>
         <% } %>
-
+        
         <a href="/quizzes/randomplay">Jugar</a>
         <a href="/author">Créditos</a>
 	<a href="/help">Ayuda</a>
+
+	<br>
+	
+	<% if (session.user) { %>
+           <a href = "/quizzes/new">- Añadir pregunta -</a>
+        <% } else {%>
+	   <a href = "/quizzes/new">- LOGIN -</a>
+	<% } %>
+
+	<br>
+	
     </nav>
 
     <section class="main" id="mainSection">

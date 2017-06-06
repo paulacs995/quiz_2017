@@ -142,11 +142,9 @@ router.get('/help', function (req, res, next) {
   //  res.render('random_play');
 //});
 
-//practica 5.2
-// RANDOMPLAY: Página a mostrar la pregunta a contestar
 router.get('/quizzes/randomplay',                        quizController.random_play);
 
-// r
+
 router.get('/quizzes/randomcheck/:quizId(\\d+)',         quizController.randomcheck);
 
 

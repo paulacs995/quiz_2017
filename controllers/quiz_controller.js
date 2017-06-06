@@ -3,12 +3,13 @@ var Sequelize = require('sequelize');
 
 var paginate = require('../helpers/paginate').paginate;
 
+
 // Autoload el quiz asociado a :quizId
 exports.load = function (req, res, next, quizId) {
 
     models.Quiz.findById(quizId, {
         include: [
-            models.Tip,
+ 	{model: models.Tip, include: [{model: models.User, as:'Author'}]},
             {model: models.User, as: 'Author'}
         ]
     })
@@ -222,8 +223,6 @@ exports.check = function (req, res, next) {
         answer: answer
     });
 };
-//  ENTREGA 5.2
-
 
 // GET /quizzes/randomplay
 //ahora creo la funcion random_play
@@ -232,8 +231,6 @@ exports.random_play = function (req, res, next) {
      // Muestra la puntuacion.
 	req.session.score = req.session.score || 0; //session al empezar la peticion 
 
-     // Array que contiene los id de las preguntas contestadas anteriormente.
-     // Usar este array para no repetir preguntas y para saber cuántas preguntas se han contestado.
 	if ( !req.session.yaacertadas ){	
 		req.session.yaacertadas = [];		
 	} 
@@ -246,9 +243,6 @@ exports.random_play = function (req, res, next) {
 		req.session.score = 0;
 		req.session.yaacertadas = [];		
 	}
-
-
-	// Nº aleatorio € [0, x] donde x = nº total de preguntas
 
 	models.Quiz.count().then(function(count){
 
@@ -269,9 +263,10 @@ exports.random_play = function (req, res, next) {
 
 			if (quiz) {
 			
-			  res.render('quizzes/randomplay', { //llamo a random_play y creo los parametros
+			  res.render('quizzes/randomplay', { 
 				score: req.session.score,
-				quiz: quiz
+				quiz: quiz,
+				tip: models.Tip
 			  });
 		
 			} else { // en el caso de que no este creado
@@ -287,14 +282,11 @@ exports.randomcheck = function (req, res, next) {
 
     models.Quiz.count().then(function(count){
 
-	    var answer = req.query.answer || ""; // Recibe respuesta en parámetro answer de query y
-		                                 // si no existe, lo inicializa con "". 
-		                                 // (Se puede enviar respuesta en blanco).
+	    var answer = req.query.answer || ""; 
 
-	 // Comprueba el resultado que tu has pasado con el resultado de la pregunta en el quiz  
 	    var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim(); 
 
-	 // Si la respuesta es correcta...
+
 	    if (result) {
 		req.session.score++;
 	    } else {
@@ -302,8 +294,7 @@ exports.randomcheck = function (req, res, next) {
 	    }
 
 
-	 // Si todavía tengo preguntas por contestar...(?)
-	    if ( req.session.yaacertadas.length !== count) { //count numero total, si el array es distinto al numero total de preguntas
+	    if ( req.session.yaacertadas.length !== count) { 
 
 		if (result) {
 			req.session.fin = false;
@@ -311,21 +302,20 @@ exports.randomcheck = function (req, res, next) {
 			req.session.fin = true;
 		}
 	   	    
-	    	res.render('quizzes/random_result', {  //Te envio a la pagina que te dice si has acertado,
-                                                       //desde alli ya te envian a volver a jugar
+	    	res.render('quizzes/random_result', { 
+                                                      
 			result: result,
 			answer: answer,
 			score: req.session.score
 	    	});
 	   
 
-	    } else { // si ya no tengo más preguntas...
+	    } else { 
 
 		req.session.fin = true;
 
-	    	res.render('quizzes/random_nomore', {  // Cambiamos de pagina auna que nos indique el final de  
-			score: req.session.score       // (se han contestado a todas las preguntas
-                                                       // correctamente)
+	    	res.render('quizzes/random_nomore', {  
+			score: req.session.score       
 	    	});	
 	    }	
     });

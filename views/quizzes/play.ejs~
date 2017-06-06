@@ -1,18 +1,24 @@
 
+
 <div class="right">
     <small> (by <%= quiz.Author ? quiz.Author.username : "Anómino" %>) </small>
 </div>
 
 <h1>
-    Ver pregunta:
+    Jugar:
 </h1>
 
-<ul>
-    <li>Pregunta: <b><%= quiz.question %></b></li>
-    <li>Respuesta: <b><%= quiz.answer %></b></li>
-</ul>
+<form method="get" action="/quizzes/<%= quiz.id %>/check">
+    <p>
+        Pregunta: <b><%= quiz.question %></b>
+    </p>
 
-<a href="/goback"><button>volver</button></a>
+
+    <div class="wideRow">
+        <input type="text" class="itemWide" name="answer" value="<%= answer %>" placeholder="Respuesta" autocomplete="off"/>
+        <input type="submit" class="itemNarrow" value="Comprobar">
+    </div>
+</form>
 
 
 <h1>
@@ -29,4 +35,5 @@
 
 <% include ../tips/index %>
 <span id="author"><small> (by <%= quiz.Author.username %>) </small></span>
+
 <a href="/quizzes"><button>Volver</button></a>

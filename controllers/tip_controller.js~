@@ -3,23 +3,20 @@ var Sequelize = require('sequelize');
 
 
 // Autoload la pista asociado a :tipId
-exports.load = function (req, res, next, tipId) { // guardar en memoria el objeto tip
+exports.load = function (req, res, next, tipId) {
 
-    models.Tip.findById(tipId, {
-	include: [
-            {model: models.User, as: 'Author'} // 5.3
-        ]})
-	    .then(function (tip) {
-		if (tip) {
-		    req.tip = tip;
-		    next();
-		} else {
-		    next(new Error('No existe tipId=' + tipId));
-		}
-	    })
-	    .catch(function (error) {
-		next(error);
-	    });
+    models.Tip.findById(tipId)
+    .then(function (tip) {
+        if (tip) {
+            req.tip = tip;
+            next();
+        } else {
+            next(new Error('No existe tipId=' + tipId));
+        }
+    })
+    .catch(function (error) {
+        next(error);
+    });
 };
 
 
@@ -39,14 +36,12 @@ exports.new = function (req, res, next) {
 
 // POST /quizzes/:quizId/tips
 exports.create = function (req, res, next) {
-
     var authorId = req.session.user && req.session.user.id || 0;
-
     var tip = models.Tip.build(
         {
             text: req.body.text,
-            QuizId: req.quiz.id,
-	    AuthorId: authorId
+            QuizId: req.quiz.id
+  	    AuthorId: authorId
         });
 
     tip.save()
@@ -63,6 +58,7 @@ exports.create = function (req, res, next) {
             req.flash('error', "" + error.errors[i].value);
         }
 
+        // Necesario usar ""+ en la sentencia anterior porque se pierde la referencia al error.
         res.redirect("back");
     })
     .catch(function (error) {
@@ -70,7 +66,7 @@ exports.create = function (req, res, next) {
         next(error);
     });
 };
-
+    
 
 // GET /quizzes/:quizId/tips/:tipId/accept
 exports.accept = function (req, res, next) {
@@ -101,7 +97,7 @@ exports.destroy = function (req, res, next) {
         next(error);
     });
 };
-
+ 
 // MW que permite acciones solamente si al usuario logeado es admin o es el autor del quiz.
 exports.adminOrAuthorRequired = function(req, res, next){
 
@@ -115,3 +111,10 @@ exports.adminOrAuthorRequired = function(req, res, next){
         res.send(403);
     }
 };
+
+
+
+
+    Contact GitHub API Training Shop Blog About 
+
+

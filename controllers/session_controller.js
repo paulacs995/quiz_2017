@@ -26,7 +26,6 @@ exports.deleteExpiredUserSession = function(req, res, next) {
             req.session.user.expires = Date.now() + maxIdleTime;
         }
     }
-    // Continuar
     next();
 };
 
