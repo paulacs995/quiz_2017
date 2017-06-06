@@ -47,6 +47,7 @@ router.get('/author', function (req, res, next) {
 });
 
 
+
 // Autoload de rutas que usen :quizId
 router.param('quizId', quizController.load);
 router.param('userId', userController.load);
@@ -132,4 +133,22 @@ router.delete('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
     tipController.destroy);
 
 
+//Pagina de Ayuda
+router.get('/help', function (req, res, next) {
+    res.render('help');
+});
+//Pagina de Ayuda
+//router.get('/quizzes/random_play', function (req, res, next) {
+  //  res.render('random_play');
+//});
+
+//practica 5.2
+// RANDOMPLAY: Página a mostrar la pregunta a contestar
+router.get('/quizzes/randomplay',                        quizController.random_play);
+
+// r
+router.get('/quizzes/randomcheck/:quizId(\\d+)',         quizController.randomcheck);
+
+
+module.exports = router;
 module.exports = router;
